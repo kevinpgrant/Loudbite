@@ -1,6 +1,9 @@
 <?php
-
-// Define path to application directory
+/**
+ * Index.php file.
+ *
+ */
+//Define path to application directory
 defined('APPLICATION_PATH')
     || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../application'));
 
@@ -19,8 +22,30 @@ require_once 'Zend/Application.php';
 
 // Create application, bootstrap, and run
 $application = new Zend_Application(
-    APPLICATION_ENV,
-    APPLICATION_PATH . '/configs/application.ini'
-);
-$application->bootstrap()
-            ->run();
+APPLICATION_ENV,
+APPLICATION_PATH . '/configs/application.ini'
+    );
+
+
+/** Routing Info **/
+$FrontController = Zend_Controller_Front::getInstance();
+$Router = $FrontController->getRouter();
+
+$Router->addRoute("artiststore",
+               new Zend_Controller_Router_Route(
+                     "artist/store",
+                      array
+                      ("controller" => "artist",
+                       "action"     => "artistaffiliatecontent"
+                      )));
+
+$Router->addRoute("artistprofile",
+                   new Zend_Controller_Router_Route(
+                       "artist/:artistname",
+                        array
+                        ("artistname" => "The Smiths",
+                         "controller" => "artist",
+                         "action"     => "profile"
+                         )));
+
+$application->bootstrap()->run();
