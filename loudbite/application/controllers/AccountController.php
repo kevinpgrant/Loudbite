@@ -24,51 +24,56 @@ class AccountController extends Zend_Controller_Action
 	public function successAction()
 	{
 
-	   $form = $this->getSignupForm();
+	      //Get the signup form
+	      $form = $this->getSignupForm();
 
-	   //Check if the submitted data is POST type
-	   if($form->isValid($_POST)){
+	      //Check if the submitted data is POST type
+	      if($form->isValid($_POST)){
 
-	      $email    = $form->getValue("email");
-	      $username = $form->getValue("username");
-	      $password = $form->getValue("password");
+	         $email    = $form->getValue("email");
+	         $username = $form->getValue("username");
+	         $password = $form->getValue("password");
 
-	      //Create Db object
-	      require_once "Db/Db.php";
-	      $db = Db_Db::conn();
+	         //Set the database parameters as described in Chapter 5
 
+	         try{
 
-	      //Create the record to save into the Db.
-	      $userData  = array("username"     => $username,
-	                         "email"        => $email,
-	                         "password"     => $password,
-	                         "status"       => 'pending',
-	                         "created_date" => new Zend_Db_Expr("NOW()"));
+	            //Save the user to the database as described in Chapter 5
 
-	      try{
+	            //Send out the welcome email.
+	            $config = array('ssl' => 'tls', 'auth' => 'login',
+	                            'username' => '<your SMTP username>',
+	                            'password' => '<your SMTP password>');
 
-	         //Insert into the accounts.
-	         $db->insert('accounts', $userData);
+	            $transport = new Zend_Mail_Transport_Smtp
+	            (
+	              '<your SMTP host>',
+	               $config
+	            );
 
-	         //Get the Id of the user
-	         $userId = $db->lastInsertId();
+	            $MailObj = new Zend_Mail();
+	            $emailMessage = " Welcome to LoudBite.com.";
+	            $fromEmail    = "welcomeparty@loudbite.com";
+	            $fromFullName = "LoudBite.com";
+	            $to           = "$email";
+	            $subject      = "Welcome to LoudBite.com";
 
-	         //Send out thank you email. We'll get to this. Chapter 6.
+	            $MailObj->setBodyText($emailMessage);
+	            $MailObj->setFrom($fromEmail, $fromFullName);
+	            $MailObj->addTo($to);
+	            $MailObj->setSubject($subject);
+	            $MailObj->send($transport);
 
-	      }catch(Zend_Db_Exception $e){
-
-	         $this->view->form   = $form;
-
+	         }catch(Zend_Db_Exception $e){
+	            echo $e->getMessage();
+	         }
+	      }else{
+	         $this->view->errors = $form->getMessages();
+	         $this->view->form = $form;
 	      }
+	 }
 
-	   }else{
 
-	      $this->view->errors = $form->getMessages();
-	      $this->view->form = $form;
-
-	   }
-
-	}
 
 
 
@@ -95,13 +100,54 @@ class AccountController extends Zend_Controller_Action
 	 */
 	public function activateAction()
 	{
-		//Fetch the email to update from the query param 'email'
-		$emailToActivate = $this->_request->getQuery("email");
 
-		//Check if the email exists
-		//Activate the Account.
+	   //Fetch the email to update from the query param 'email'
+	   $emailToActivate = $this->_request->getQuery("email");
+
+		//Create a db object
+		require_once "Db/Db.php";
+		$db = Db_Db::conn();
+
+		try{
+
+			//Check if the user is in the system
+			$statement = "SELECT COUNT(id) AS total From Accounts
+						  WHERE email = '".$emailToActivate."'
+						  AND status = 'pending'";
+
+			$results = $db->fetchOne($statement);
+
+			//If we have at least one row then the user's
+			//email is valid.
+			if($results == 1){
+
+				//Activate the account.
+				$conditions[] = "email = '".$emailToActivate."'";
+
+				//Updates to commit
+				$updates = array("status" => 'active');
+				$results = $db->update('Accounts',
+										$updates,
+										$conditions);
+
+				//Set activate flag to true
+				$this->view->activated = true;
+
+			}else{
+
+				//Set activate flag to false
+				$this->view->activated = false;
+
+			}
+
+		}catch(Zend_Db_Exception $e){
+
+			throw new Exception($e);
+
+		}
 
 	}
+
 
 
 	/**
