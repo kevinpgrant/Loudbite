@@ -694,50 +694,6 @@ class SearchController extends Zend_Controller_Action
 	}
 
 
-	/**
-	 * Result.  Fetch the result and display to the user.
-	 *
-	 */
-	public function resultAction()
-	{
-
-	   //Open the index to search in.
-	   $Index = new Zend_Search_Lucene('../application/searchindex');
-
-	   //Set the properties for the Index.
-	   $Index->setDefaultSearchField('artist_name');
-	   $Index->setResultSetLimit(10);
-
-	   //Construct Query
-	   $query = 'genre:electronic';
-	   $query = Zend_Search_Lucene_Search_QueryParser::parse($query);
-
-	   //Search.
-	   $hits = $Index->find($query,
-							'artist_name',
-							SORT_STRING,
-							SORT_ASC);
-
-	   $text = "";
-	   foreach($hits as $hit){
-
-		  $text .= "<tr><td>
-						<a href='artist/'>$hit->artist_name</a>
-						$hit->genre
-				   </td></tr>";
-
-		  $text .= "<tr><td>$hit->description<br/><br/></td></tr>";
-
-	   }
-
-	   //Highlight the words.
-	   $text = $query->htmlFragmentHighlightMatches ($text);
-
-	   //Set the view variables
-	   $this->view->text = $text;
-	}
-
-
 
 
 
