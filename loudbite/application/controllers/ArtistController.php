@@ -48,30 +48,84 @@ class ArtistController extends Zend_Controller_Action
 
 
 	/**
-	 * Save the Artist entered by the user.
+	 * Save Artist to Db
+	 *
 	 */
-	 public function saveArtistAction(){
+	public function saveArtistAction(){
 
-	  //Initialize variables
-	  $artistName = $this->_request->getPost('artistName');
-	  $genre    = $this->_request->getPost('genre');
-	  $rating   = $this->_request->getPost('rating');
-	  $isFav     = $this->_request->getPost('isFav');
+	   //Create instance of artist form.
+	   $form = $this->getAddArtistForm();
 
-	  //Set new escape function to use.
-	  require "utils/Escape.php";
-	  $escapeObj = new Escape();
-	  $this->view->setEscape(array($escapeObj, "doEnhancedEscape"));
+	   //Check for logged in status
+	   if(!isset($_SESSION['id'])){
 
-	  //Clean up inputs
-	  $artistName = $this->view->escape($artistName);
-	  $genre    = $this->view->escape($genre);
-	  $rating   = $this->view->escape($rating);
-	  $isFav     = $this->view->escape($isFav);
+	      $this->_forward("login");
 
-	  //Save the input
+	   }
+
+	   //Check if there were no errors
+	   if($form->isValid($_POST)){
+
+	      //Initialize the variables
+	      $artistName = $form->getValue('artistName');
+	      $genre      = $form->getValue('genre');
+	      $rating     = $form->getValue('rating');
+	      $isFav      = $form->getValue('isFavorite');
+
+	      //Set the temporary account id to use.
+	      $userId = $_SESSION['id'];
+
+	      //Create a db object
+	      require_once "Db/Db.php";
+	      $db = Db_Db::conn();
+
+	      $db->beginTransaction();
+
+	      try{
+
+	         //Initialize data to save into DB
+	         $artistData = array("artist_name"    => $artistName,
+	                             "genre"        => $genre,
+	                             "created_date" =>
+	                             new Zend_Db_Expr("NOW()"));
+
+	         //Insert the artist into the Db
+	         $db->insert('artists', $artistData);
+
+	         //Fetch the artist id
+	         $artistId = $db->lastInsertId();
+
+	         //Initialize data for the account artists table
+	         $accountArtistData = array("account_id"   =>  $userId,
+	                                    "artist_id"      => $artistId,
+	                                    "rating"       => $rating,
+	                                    "is_fav"       =>  $isFav,
+	                                    "created_date" =>
+	                                    new Zend_Db_Expr("NOW()"));
+
+	         //Insert the data.
+	         $db->insert('accounts_artists', $accountArtistData);
+
+	         $db->commit();
+
+	      }catch(Zend_Db_Exception $e){
+
+	         //If there were errors roll everything back.
+	         $db->rollBack();
+	         echo $e->getMessage();
+
+	      }
+
+	   }else{
+
+	      $this->view->errors = $form->getMessages();
+	      $this->view->form = $form;
+
+	   }
 
 	}
+
+
 
 
 
@@ -213,6 +267,470 @@ class ArtistController extends Zend_Controller_Action
 
 	}
 
+
+	/**
+	 * Test - Object Oriented Select Statement
+	 *
+	 */
+	public function testoostatementAction_Listing_5_26() {
+
+	   //Create DB object
+	   require_once "Db/Db.php";
+	   $db = Db_Db::conn();
+
+	   $select = new Zend_Db_Select($db);
+
+	   //Supress the View
+	   $this->_helper->viewRenderer->setNoRender();
+
+	}
+
+
+	/**
+	 * Test - Object Oriented Select Statement
+	 */
+	public function testoostatementAction_Listing_5_27() {
+
+	   //Create DB object
+	   require_once "Db/Db.php";
+	   $db = Db_Db::conn();
+
+	   //Create the statement
+	   //Select * FROM `artists`;
+	   $select = new Zend_Db_Select($db);
+	   $statement = $select->from('artists');
+
+	   //Compare Statement
+	   echo $statement->__toString();
+
+	   //Supress the View
+	   $this->_helper->viewRenderer->setNoRender();
+
+	}
+
+	/**
+	 * Test - Object Oriented Select Statement
+	 *
+	 */
+	public function testoostatementAction_Listing_5_28() {
+
+	   //Create DB object
+	   require_once "Db/Db.php";
+	   $db = Db_Db::conn();
+
+	   //Create the statement
+	   //SELECT `artists`.`id`, `artists`.`artist_name`, `artists`.`genre`
+	   //FROM `artists`
+	   $select = new Zend_Db_Select($db);
+
+	   //Determine which columns to retrieve.
+	   $columns = array('id', 'artist_name', 'genre');
+	   $statement = $select->from('artists', $columns);
+
+	   //Compare Statement
+	   echo $statement->__toString();
+
+	   //Supress the View
+	   $this->_helper->viewRenderer->setNoRender();
+
+	}
+
+
+	/**
+	 * Test - Object Oriented Select Statement
+	 *
+	 */
+	public function testoostatementAction_5_29() {
+
+	   //Create DB object
+	   require_once "Db/Db.php";
+	   $db = Db_Db::conn();
+
+	   //Create the statement
+	   //SELECT `artists`.`id`, `artists`.`artist_name`, `artists`.`genre`
+	   //FROM `artists`
+	   $select = new Zend_Db_Select($db);
+
+	   //Determine which columns to retrieve.
+	   $columns = array('id', 'artist_name', 'genre');
+	   $statement = $select->from('artists', $columns);
+
+	   //Query the Database
+	   $results = $db->query($statement);
+	   $rows    = $results->fetchAll();
+
+	   //Compare Statement
+	   echo $statement->__toString();
+
+	   //Supress the View
+	   $this->_helper->viewRenderer->setNoRender();
+	}
+
+
+
+	/**
+	 * Test - Object Oriented Select Statement
+	 *
+	 */
+	public function testoostatementAction_Listing_5_30() {
+
+	   //Create DB object
+	   require_once "Db/Db.php";
+	   $db = Db_Db::conn();
+
+	   //Create the statement
+	   //SELECT `a`.`id` AS `artist id`, `a`.`artist_name` AS `name`,
+	   //`a`.`genre` FROM `artists` AS `a`
+	   $select = new Zend_Db_Select($db);
+
+	   //Determine which columns to retrieve.
+	   //Determine which table to retrieve data from.
+	   $columns    = array("artist id" => 'id',
+						  "name"    => 'artist_name',
+						  "genre"   =>  'genre');
+
+	   $tableInfo = array("a" => "artists");
+	   $statement = $select->from($tableInfo, $columns);
+
+	   //Query the Database
+	   $results = $db->query($statement);
+	   $rows    = $results->fetchAll();
+
+	   //Compare Statement
+	   echo $statement->__toString();
+
+	   //Supress the View
+	   $this->_helper->viewRenderer->setNoRender();
+
+	}
+
+
+	/**
+	 * Test - Object Oriented Select Statement
+	 *
+	 */
+	public function testoostatementAction_Listing_5_31() {
+
+	   //Create DB object
+	   require_once "Db/Db.php";
+	   $db = Db_Db::conn();
+
+	   //Create the statement
+	   //SELECT `a`.`id`, `a`.`artist_name` AS `name`, `a`.`genre`
+	   //FROM `artists` AS `a` WHERE (artist_name='Groove Armada')
+	   $select = new Zend_Db_Select($db);
+
+	   //Determine which columns to retrieve.
+	   //Determine which table to retrieve data from.
+	   $columns    = array("id"     => 'id',
+						  "name"    => 'artist_name',
+						  "genre"   => 'genre');
+
+	   $tableInfo = array("a" => 'artists');
+
+	   $statement = $select->from($tableInfo, $columns)
+						   ->where("artist_name=?", 'Groove Armada');
+
+	   //Query the Database
+	   $results = $db->query($statement);
+	   $rows    = $results->fetchAll();
+
+	   //Compare Statement
+	   echo $statement->__toString();
+
+	   //Supress the View
+	   $this->_helper->viewRenderer->setNoRender();
+
+	}
+
+
+
+	/**
+	 * Test - Object Oriented Select Statement
+	 *
+	 */
+	public function testoostatementAction_5_32() {
+
+	   //Create DB object
+	   require_once "Db/Db.php";
+	   $db = Db_Db::conn();
+
+	   //Create the statement
+	   //SELECT `a`.`id`, `a`.`artist_name` AS `name`, `a`.`genre`
+	   //FROM `artists` AS `a`
+	   //WHERE (artist_name='Groove Armada') AND (genre='electronic')
+	   $select = new Zend_Db_Select($db);
+
+	   //Determine which columns to retrieve.
+	   //Determine which table to retrieve data from.
+	   $column    = array("id"      => 'id',
+						  "name"    => 'artist_name',
+						  "genre"   =>  'genre');
+
+	   $tableInfo = array("a" => 'artists');
+
+	   $statement = $select->from($tableInfo, $column)
+						   ->where("artist_name=?", 'Groove Armada')
+						   ->where('genre=?', 'electronic');
+
+	   //Query the Database
+	   $results = $db->query($statement);
+	   $rows    = $results->fetchAll();
+
+	   //Compare Statement
+	   echo $statement->__toString();
+
+	   //Supress the View
+	   $this->_helper->viewRenderer->setNoRender();
+
+	}
+
+
+	/**
+	 * Test - Object Oriented Select Statement
+	 *
+	 */
+	public function testoostatementAction_5_33() {
+
+	   //Create DB object
+	   require_once "Db/Db.php";
+	   $db = Db_Db::conn();
+
+	   //Create the statement
+	   //SELECT `a`.`id`, `a`.`artist_name` AS `name`, `a`.`genre`
+	   //FROM `artists` AS `a`
+	   //WHERE (artist_name='Groove Armada')
+	   //AND (genre='electronic') OR (genre='house')
+	   $select = new Zend_Db_Select($db);
+
+	   //Determine which columns to retrieve.
+	   //Determine which table to retrieve data from.
+	   $columns    = array("id"     => 'id',
+	                       "name"    => 'artist_name',
+	                       "genre"   => 'genre');
+
+
+	   $tableInfo = array("a" => 'artists');
+
+	   $statement = $select->from($tableInfo, $columns)
+	                       ->where("artist_name=?", 'Groove Armada')
+	                       ->where('genre=?', 'electronic')
+	                       ->orWhere('genre=?', 'house');
+
+	   //Query the Database
+	   $results = $db->query($statement);
+	   $rows    = $results->fetchAll();
+
+	   //Compare Statement
+	   echo $statement->__toString();
+
+	   //Supress the View
+	   $this->_helper->viewRenderer->setNoRender();
+
+	}
+
+
+	/**
+	 * Test - Get All Fans
+	 *
+	 */
+	public function testoofansAction_Listing_5_34(){
+
+	   //Create DB object
+	   require_once "Db/Db.php";
+	   $db = Db_Db::conn();
+
+	   //Create the statement
+	   //SELECT `a`.`id` AS `artist id`, `a`.`artist_name` AS `name`,
+	   //`a`.`genre`,aa`.`account_id` AS `user_id`,
+	   //`aa`.`created_date` AS `date_became_fan`
+	   //FROM `artists` AS `a`
+	   //INNER JOIN `accounts_artists` AS `aa` ON aa.artist_id = a.id
+	   $select = new Zend_Db_Select($db);
+
+	   //Determine which columns to retrieve.
+	   //Determine which table to retrieve data from.
+	   $columns   = array("artist id" => 'a.id',
+						  "name"    => 'a.artist_name',
+						  "genre"   =>  'a.genre');
+
+	   $tableInfo = array("a" => 'artists');
+
+	   $statement = $select->from($tableInfo, $columns)
+						   ->join(array("aa" => 'accounts_artists'),
+								  'aa.artist_id = a.id',
+								  array("user_id" => 'aa.account_id',
+										"date_became_fan" =>
+										'aa.created_date'));
+
+	   $results = $db->query($statement);
+	   $rows    = $results->fetchAll();
+
+	   //Compare Statement
+	   echo $statement->__toString();
+
+	   //Supress the View
+	   $this->_helper->viewRenderer->setNoRender();
+
+	}
+
+
+	/**
+	 * Test - Get All Fans
+	 *
+	 */
+	public function testoofansAction_Listing_5_35(){
+
+	   //Create DB object
+	   require_once "Db/Db.php";
+	   $db = Db_Db::conn();
+
+	   //Create the statement
+	   //SELECT `a`.`id` AS `artist id`, `a`.`artist_name` AS `name`,
+	   //`a`.`genre`, `aa`.`account_id` AS `user_id`,
+	   //`aa`.`created_date` AS `date_became_fan`
+	   //FROM `artists` AS `a`
+	   //INNER JOIN `accounts_artists` AS `aa` ON aa.artist_id = a.id
+	   //ORDER BY `date_became_fan` DESC LIMIT 10
+	   $select = new Zend_Db_Select($db);
+
+	   //Determine which columns to retrieve.
+	   //Determine which table to retrieve data from.
+	   $columns   = array("artist id" => 'a.id',
+						  "name"    => 'a.artist_name',
+						  "genre"   =>  'a.genre');
+
+	   $tableInfo = array("a" => 'artists');
+
+	   $statement = $select->from($tableInfo, $columns)
+						   ->join(array("aa" => 'accounts_artists'),
+								  'aa.artist_id = a.id',
+								  array("user_id" => 'aa.account_id',
+										"date_became_fan" =>
+										'aa.created_date'))
+						   ->order("date_became_fan DESC")
+						   ->limit(10);;
+
+	   $results = $db->query($statement);
+	   $rows    = $results->fetchAll();
+
+	   //Compare Statement
+	   echo $statement->__toString();
+
+	   //Supress the View
+	   $this->_helper->viewRenderer->setNoRender();
+
+	}
+
+
+	/**
+	 * Test - Database expression.
+	 *
+	 */
+	public function testoocountAction(){
+
+	   //Create Db object
+	   require_once "Db/Db.php";
+	   $db = Db_Db::conn();
+
+	   //Create the statement
+	   // SELECT COUNT(id) AS `total_fans` FROM `accounts_artists` AS `aa`
+	   $select = new Zend_Db_Select($db);
+
+	   //Determine which columns to retrieve.
+	   //Determine which table to retrieve data from.
+	   $columns   = array("total_fans" =>'COUNT(id)');
+	   $tableInfo = array("aa" => 'accounts_artists');
+
+	   $statement = $select->from($tableInfo, $columns);
+
+	   $results = $db->query($statement);
+	   $rows    = $results->fetchAll();
+
+	   //Compare Statement
+	   echo $statement->__toString();
+
+	   //Supress the View
+	   $this->_helper->viewRenderer->setNoRender();
+
+	}
+
+
+	/**
+	 * Test - Return distinct genres
+	 *
+	 */
+	public function testoogenrelistAction(){
+
+	   //Create Db object
+	   require_once "Db/Db.php";
+	   $db = Db_Db::conn();
+
+	   //Create the statement
+	   //SELECT DISTINCT `a`.`genre` FROM `artists` AS `a`
+	   $select = new Zend_Db_Select($db);
+
+	   //Determine which columns to retrieve.
+	   //Determine which table to retrieve data from.
+	   $columns   = array("genre" =>'a.genre');
+	   $tableInfo = array("a" => 'artists');
+
+	   $statement = $select->from($tableInfo, $columns)
+	                                ->distinct();
+
+	   $results = $db->query($statement);
+	   $rows    = $results->fetchAll();
+
+	   //Compare Statement
+	   echo $statement->__toString();
+
+	   //Supress the View
+	   $this->_helper->viewRenderer->setNoRender();
+
+	}
+
+
+
+	/**
+	 * Display all the Artists in the system.
+	 */
+	public function listAction(){
+
+	   $currentPage = 1;
+	   //Check if the user is not on page 1
+	   $i = $this->_request->getQuery('i');
+
+	   if(!empty($i)){ //Where i is the current page
+
+	      $currentPage = $this->_request->getQuery('i');
+
+	   }
+
+	   //Create Db object
+	   require_once "Db/Db. php";
+	   $db = Db_Db::conn();
+
+	   //Create a Zend_Db_Select object
+	   $sql = new Zend_Db_Select($db);
+
+	   //Define columns to retrieve as well as the table.
+	   $columns   = array("id", "artist_name");
+	   $table     = array("artists");
+
+	   //SELECT `artists`.`id`, `artists`.`artist_name` FROM `artists`
+	   $statement = $sql->from($table, $columns);
+
+	   //Initialize the Zend_Paginator
+	   $paginator = Zend_Paginator::factory($statement);
+
+	   //Set the properties for the pagination
+	   $paginator->setItemCountPerPage(10);
+	   $paginator->setPageRange(3);
+	   $paginator->setCurrentPageNumber($currentPage);
+
+	   $this->view->paginator = $paginator;
+
+	}
 
 
 

@@ -33,7 +33,33 @@ class AccountController extends Zend_Controller_Action
 	      $username = $form->getValue("username");
 	      $password = $form->getValue("password");
 
-	      //Save the user into the system.
+	      //Create Db object
+	      require_once "Db/Db.php";
+	      $db = Db_Db::conn();
+
+
+	      //Create the record to save into the Db.
+	      $userData  = array("username"     => $username,
+	                         "email"        => $email,
+	                         "password"     => $password,
+	                         "status"       => 'pending',
+	                         "created_date" => new Zend_Db_Expr("NOW()"));
+
+	      try{
+
+	         //Insert into the accounts.
+	         $db->insert('accounts', $userData);
+
+	         //Get the Id of the user
+	         $userId = $db->lastInsertId();
+
+	         //Send out thank you email. We'll get to this. Chapter 6.
+
+	      }catch(Zend_Db_Exception $e){
+
+	         $this->view->form   = $form;
+
+	      }
 
 	   }else{
 
@@ -43,8 +69,6 @@ class AccountController extends Zend_Controller_Action
 	   }
 
 	}
-
-
 
 
 
@@ -253,7 +277,561 @@ class AccountController extends Zend_Controller_Action
 	}
 
 
+	/**
+	 * Test our connection
+	 */
+	public function testConnAction()
+	{
 
+	   try{
+
+		  $connParams = array("host"     => "localhost",
+							  "port"     => "<Your Port Number>",
+							  "username" => "<Your username>",
+							  "password" => "<Your password>",
+							  "dbname"   => "loudbite");
+
+		  $db = new Zend_Db_Adapter_Pdo_Mysql($connParams);
+
+	   }catch(Zend_Db_Exception $e){
+		  echo $e->getMessage();
+	   }
+
+	   echo "Database object created.";
+
+	   //Turn off View Rendering.
+	   $this->_helper->viewRenderer->setNoRender();
+	}
+
+
+	/**
+	 * Test Insert
+	 */
+	public function testInsertAction_Listing_5_3()
+	{
+
+	   try {
+
+		  //Create a DB object
+		  require_once "Db/Db.php";
+		  $db = Db_Db::conn();
+
+		  //DDL for initial 3 users
+		  $statement  = "INSERT INTO accounts(
+							username, email, password,status, created_date
+						 )
+					   VALUES(
+						  'test_1', 'test@loudbite.com', 'password',
+						  'active', NOW()
+					   )";
+
+		  $statement2 = "INSERT INTO accounts(
+							username,email,password,status,created_date
+						 )
+						 VALUES(
+							'test_2', 'test2@loudbite.com', 'password',
+							'active', NOW()
+						 )";
+
+		  $statement3 = "INSERT INTO accounts(
+							username,email,password,status,created_date
+						 )
+						 VALUES (
+							?, ?, ?, ?, NOW()
+						 )";
+
+		  //Insert the above statements into the accounts.
+		  $db->query($statement);
+		  $db->query($statement2);
+
+		  //Insert the statement using ? flags.
+		  $db->query($statement3, array('test_3', 'test3@loudbite.com',
+		  'password', 'active'));
+
+		  //Close Connection
+		  $db->closeConnection();
+
+		  echo "Completed Inserting";
+
+	   }catch(Zend_Db_Exception $e){
+		  echo $e->getMessage();
+	   }
+
+	   //Supress the View.
+	   $this->_helper->viewRenderer->setNoRender();
+
+	}
+
+
+
+	/**
+	 * Test Insert Method
+	 * Insert data into table using insert()
+	 */
+	public function testInsertMethodAction_Listing_5_4()
+	{
+
+	   try{
+
+		  //Create a DB object
+		  require_once "Db/Db.php";
+		  $db = Db_Db::conn();
+
+		  //Data to save.
+		  $userData1 = array("username"    => 'test_4',
+							 "email"       => 'test4@loudbite.com',
+							 "password"    => 'password',
+							 "status"      => 'active',
+							 "created_date" => '0000-00-00 00:00:00');
+
+		  $userData2 = array("username"    => 'test_5',
+							 "email"       => 'test5@loudbite.com',
+							 "password"    => 'password',
+							 "status"      => 'active',
+							 "created_date"=> '0000-00-00 00:00:00');
+
+		  $userData3 = array("username"    => 'test_6',
+							 "email"       => 'test6@loudbite.com',
+							 "password"    => 'password',
+							 "status"      => 'active',
+							 "created_date"=> '0000-00-00 00:00:00');
+
+		  //Insert into the Accounts.
+		  $db->insert('accounts', $userData1);
+		  $db->insert('accounts', $userData2);
+		  $db->insert('accounts', $userData3);
+
+		  //Close Connection
+		  $db->closeConnection();
+
+		  echo "Completed Inserting";
+
+	   }catch(Zend_Db_Exception $e){
+		  echo $e->getMessage();
+	   }
+
+	   //Supress the View
+	   $this->_helper->viewRenderer->setNoRender();
+
+	}
+
+
+	/**
+	 * Test Expression
+	 * Using Database Expressions.
+	 */
+	public function testExpressionAction()
+	{
+
+	   try{
+
+		  //Create a DB object
+		  require_once "Db/Db.php";
+		  $db = Db_Db::conn();
+
+		  //Data to save.
+		  $userData = array("username"     => 'test_7',
+							 "email"       => 'test7@loudbite.com',
+							 "password"    => 'password',
+							 "status"      => 'active',
+							 "created_date"=> new Zend_Db_Expr("NOW()"));
+
+		  //Insert into the accounts.
+		  $db->insert('accounts', $userData);
+
+		  //Close Connection
+		  $db->closeConnection();
+
+		  echo "Completed Inserting";
+
+	   }catch(Zend_Db_Exception $e){
+		  echo $e->getMessage();
+	   }
+
+	   //Supress the View
+	   $this->_helper->viewRenderer->setNoRender();
+
+	}
+
+
+	/**
+	 * Test Quote
+	 */
+	public function testQuoteAction()
+	{
+
+	   try {
+
+		  //Create Db object
+		  require_once "Db/Db.php";
+		  $db = Db_Db::conn();
+
+		  $username = "testing ' user";
+		  $usernameAfterQuote = $db->quote($username);
+
+		  echo "BEFORE QUOTE: $username<br>";
+		  echo "AFTER QUOTE: $usernameAfterQuote<br>";
+
+		  //DDL for initial 3 users
+		  echo $statement  = "INSERT INTO accounts(
+			   username, email, password, status, created_date
+			  )
+			  VALUES(
+			  $usernameAfterQuote, 'test8@loudbite.com', 'password',
+			  'active', NOW()
+			  )";
+
+		  //Insert the above statements into the accounts.
+		  $db->query($statement);
+
+		  //Close Connection
+		  $db->closeConnection();
+
+		  echo "Successfully inserted.";
+
+	   }catch(Zend_Db_Exception $e){
+		  echo $e->getMessage();
+	   }
+
+	   //Supress the View.
+	   $this->_helper->viewRenderer->setNoRender();
+	}
+
+
+	/**
+	 * Test Last Insert
+	 */
+	public function testLastInsertAction()
+	{
+
+	   try {
+
+		  //Create Db object
+		  require_once "Db/Db.class.php";
+		  $db = Db_Db::conn();
+
+		  //Data to save.
+		  $userData = array("username"     => 'testinguser9',
+							"email"        => 'test9@loudbite.com',
+							"password"     => 'password',
+							"status"       => 'active',
+							"created_date" => new Zend_Db_Expr("NOW()"));
+
+		  $db->insert('accounts', $userData);
+
+		  //Retrieve the id for the new record and echo
+		  $id = $db->lastInsertId();
+		  echo "Last Inserted Id: ".$id."<br>";
+
+		  //Close Connection
+		  $db->closeConnection();
+
+		  echo "Successfully Inserted Data";
+
+	   }catch(Zend_Db_Exception $e){
+		  echo $e->getMessage();
+	   }
+
+	   //Supress the View.
+	   $this->_helper->viewRenderer->setNoRender();
+
+	}
+
+
+	/**
+	 * View All Accounts.
+	 *
+	 */
+	public function viewAllAction()
+	{
+
+	   //Create Db Object
+	   require_once "Db/Db.php";
+	   $db = Db_Db::conn();
+
+	   try{
+
+	      //Create the SQL statement to select the data.
+	      $statement = "SELECT id, username, created_date
+	                    FROM accounts
+	                    WHERE status = 'active'";
+
+	      //Fetch the data
+	      $results = $db->fetchAll($statement);
+
+	      //Create the SQL statement to
+	      //fetch the COUNT of all active members.
+	      $statement = "SELECT COUNT(id) as total_members
+	                    FROM accounts
+	                    WHERE status = 'active'";
+
+	      //Fetch ONLY the count of active members.
+	      $count = $db->fetchOne($statement);
+
+	      //Set the view variable.
+	      $this->view->members      = $results;
+	      $this->view->totalMembers = $count;
+
+	   }catch(Zend_Db_Exception $e){
+
+	      echo $e->getMessage();
+
+	   }
+
+	}
+
+
+	/**
+	 * Get Login Form
+	 *
+	 * @return Zend_Form
+	 */
+	private function getLoginForm()
+	{
+
+	   //Create the form
+	   $form = new Zend_Form();
+	   $form->setAction("authenticate");
+	   $form->setMethod("post");
+	   $form->setName("loginform");
+
+	   //Create text elements
+	   $emailElement = new Zend_Form_Element_Text("email");
+	   $emailElement->setLabel("Email: ");
+	   $emailElement->setRequired(true);
+
+	   //Create password element
+	   $passwordElement = new
+				Zend_Form_Element_Password("password");
+	   $passwordElement->setLabel("Password: ");
+	   $passwordElement->setRequired(true);
+
+	   //Create the submit button
+	   $submitButtonElement = new
+				Zend_Form_Element_Submit("submit");
+	   $submitButtonElement->setLabel("Log In");
+
+	   //Add Elements to form
+	   $form->addElement($emailElement);
+	   $form->addElement($passwordElement);
+	   $form->addElement($submitButtonElement);
+
+	   return $form;
+
+	}
+
+
+
+	/**
+	 * Load the Login Form.
+	 *
+	 */
+	public function loginAction(){
+
+	   //Initialize the form for the view.
+	   $this->view->form = $this->getLoginForm();
+
+	}
+
+
+	/**
+	 * Authenticate login information.
+	 *
+	 */
+	public function authenticateAction(){
+
+	   $form = $this->getLoginForm();
+
+	   if($form->isValid($_POST)){
+
+		  //Initialize the variables
+		  $email    = $form->getValue("email");
+		  $password = $form->getValue("password");
+
+		  //Create a db object
+		  require_once "Db/Db.php";
+		  $db = Db_Db::conn();
+
+		  //Quote values
+		  $email    = $db->quote($email);
+		  $password = $db->quote($password);
+
+		  //Check if the user is in the system and active
+		  $statement = "SELECT COUNT(id) AS total From accounts
+						WHERE email = ".$email."
+						AND password = ".$password."
+						AND status = 'active'";
+
+		  $results   = $db->fetchOne($statement);
+
+		  //If we have at least one row then the users
+		  //email and password is valid.
+		  if($results == 1){
+
+			 //Fetch the user's data
+			 $statement = "SELECT id, username, created_date FROM accounts
+						   WHERE email = ".$email."
+						   AND password = ".$password;
+
+			 $results = $db->fetchRow($statement);
+
+			 //Set the user's session
+			 $_SESSION['id']         = $results['id'];
+			 $_SESSION['username']   = $results['username'];
+			 $_SESSION['dateJoined'] = $results['created_date'];
+
+			 //Forward the user to the profile page
+			 $this->_forward("accountmanager");
+
+		  }else{
+
+			 //Set the Error message and re-display the login page.
+			 $this->view->form  = $form;
+			 $this->_forward('login', 'account');
+
+		  }
+
+	   }else{
+		  $this->_forward("login");
+	   }
+	}
+
+
+	/**
+	 * Account Manager.
+	 *
+	 */
+	public function accountmanagerAction()
+	{
+
+	   //Check if the user is logged in
+	   if(!isset($_SESSION['id'])){
+		  $this->_forward("login");
+	   }
+
+	   try{
+
+		  //Create a db object
+		  require_once "Db/Db.php";
+		  $db = Db_Db::conn();
+
+		  //Initialize data.
+		  $userId     = $_SESSION['id'];
+		  $userName   = $_SESSION['username'];
+		  $dateJoined = $_SESSION['dateJoined'];
+
+
+		  //Fetch all the users favorite artists.
+		  $statement = "SELECT b.artist_name, b.id,
+						aa.created_date as date_became_fan
+						FROM artists AS b
+						INNER JOIN accounts_artists aa ON aa.artist_id = b.id
+						WHERE aa.account_id = ?
+						AND aa.is_fav = 1";
+
+		  $favArtists = $db->fetchAll($statement, $userId);
+
+
+		  //Set the view variables
+		  $this->view->artists    = $favArtists;
+		  $this->view->username   = $userName;
+		  $this->view->dateJoined = $dateJoined;
+
+	   }catch(Zend_Db_Exception $e){
+		  echo $e->getMessage();
+	   }
+
+	}
+
+
+	/**
+	 * Example- Delete Specific Account.
+	 *
+	 */
+	public function testDeleteAction()
+	{
+
+	   require_once "Db/Db.php";
+	   $db = Db_Db::conn();
+
+	   try{
+
+	      //Delete the record with
+	      //username = 'testinguser9' AND status = 'active'
+	      $conditions[] = "username = 'testinguser9'";
+	      $conditions[] = "status = 'active'";
+
+	      //Execute the query.
+	      $results = $db->delete('accounts', $conditions);
+
+	      //If the execution deleted 1 account then show success.
+	      if($results == 1){
+
+	         echo "Successfully Deleted Single Record.";
+
+	      }else{
+
+	         echo "Could not find record.";
+
+	      }
+
+	   }catch(Zend_Db_Exception $e){
+
+	      echo $e->getMessage();
+
+	   }
+
+	   //Supress the View.
+	   $this->_helper->viewRenderer->setNoRender();
+
+	}
+
+
+
+	/**
+	 * Example - Update Account
+	 *
+	 */
+	public function testUpdateAction(){
+
+	   require_once "Db/Db.php";
+	   $db = Db_Db::conn();
+
+	   try{
+
+		  //Update the account 'test_1'
+		  //Set the email to exampleupdate@loudbite.com
+		  $conditions[] = "username = 'test_1'";
+		  $conditions[] = "status = 'active'";
+
+		  //Updates to commit
+		  $updates = array("email" =>
+						   'exampleupdate@loudbite.com');
+
+		  $results = $db->update('accounts',
+								  $updates,
+								  $conditions);
+
+		  if($results == 1){
+
+			 echo "Successfully Updated Record.";
+
+		  }else{
+
+			 echo "Could not update record.";
+
+		  }
+
+	   }catch(Zend_Db_Exception $e){
+
+		  echo $e->getMessage();
+
+	   }
+
+	   //Supress the View.
+	   $this->_helper->viewRenderer->setNoRender();
+
+	}
 
 
 }
