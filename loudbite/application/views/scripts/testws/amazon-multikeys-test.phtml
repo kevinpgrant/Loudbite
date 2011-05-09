@@ -1,0 +1,17 @@
+<?php echo $this->doctype('XHTML1_STRICT'); ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+   <?php echo $this->headTitle('LoudBite.com - Amazon test'); ?>
+</head>
+<body>
+
+    <?php echo $this->render('includes/header.phtml') ?>
+    <h3>Amazon test</h3>
+	<?php
+	foreach($this->results as $result)
+	{
+		echo $result->Title."<br>";
+	}
+	?>
+</body>
+</html>

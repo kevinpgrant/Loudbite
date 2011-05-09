@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<rss version="2.0">
+<channel>
+<title>My Music Web Site Home Page</title>
+<link>http://www.loudbite.com</link>
+Download at Boykma.Com
+CHAPTER 7 . WEB SERVICES AND FEEDS
+304
+<description>Weekly articles diving head first into the gossip,
+new releases, concert dates, and anything related to the music industry around
+the world. </description>
+<!-- Cache for 3 hours -->
+<ttl>180</ttl>
+<!-- Set the copyright info -->
+<copyright>Music News 2008</copyright>
+<!-- Set the language info -->
+<language>English</language>
+<category>Music</category>
+<pubDate>October 03, 2008</pubDate>
+<!-- Start list of articles -->
+<item>
+<author>fuglymaggie@ficticiousexample.com</author>
+<enclosure url="" type="" />
+<title>Criss Cross, now 35, continue wearing pants backward
+to look cool.</title>
+<link>http://www.loudbite.com/full link to your article</link>
+<description>Rap duo, Criss Cross continue to wear pants backward
+after repeated attemps to inform them, the 90s are over...let it go...let it go.
+</description>
+</item>
+<item>
+<author>someeditor@ficticiousexample.com</author>
+<enclosure url="" type="" />
+<title>New PWG LP released!</title>
+<link>htp://www.loudbite.com/link to this articles page</link>
+<description>The new Puppies Wearing Glasses LP has hit the street.
+First slated for October 3rd its now officially out. </description>
+</item>
+</channel>
+</rss>

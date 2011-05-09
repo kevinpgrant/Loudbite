@@ -9,10 +9,10 @@ class SaveAccount {
 
 
     /**
-     * Save Account 
+     * Save Account
      *
      * @param String $username
-     * @param String $password 
+     * @param String $password
      * @param String $email
      */
     public function saveAccount($username, $password, $email){
@@ -22,17 +22,17 @@ class SaveAccount {
         $password = $this->_db->escape($password);
         $email    = $this->_db->escape($email);
 
-	  //Set up mysqli instance
-        $dbconn = mysqli('localhost', 
-                       '<Your Username>', 
-                       '<Your Password>');
-	  $dbconn->select_db('loudbite');
+      //Set up mysqli instance
+        $dbconn = mysqli('localhost',
+                       'database_app_user',
+                       'database_app_password');
+      $dbconn->select_db('loudbite');
 
 
         //Create the SQL statement and insert.
-        $statement = "INSERT INTO Accounts (username, password, email)
-                      VALUES ('".$username."', 
-                              '".$password."', 
+        $statement = "INSERT INTO accounts (username, password, email)
+                      VALUES ('".$username."',
+                              '".$password."',
                               '".$email."')";
 
         $dbconn->query($statement);

@@ -1,11 +1,37 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head><title>Hello World</title></head>
-<body>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <link rel="alternate" title="Loudbite static xml fed RSS" href="/rss.xml" type="application/rss+xml">
+        <link rel="alternate" title="Loudbite auto generated RSS" href="/testws/createrss" type="application/rss+xml">
+        <title>LoudBite.com - Account Sign up</title>
+    </head>
+    <body>
+        <?php echo $this->render('includes/header.phtml') ?>
+        <h3>Welcome to loudbite</h3>
+        Hello, I was built using Zend Framework!<br />
+        Code corrections and fix ups by Nevyn Apr 2011<br />
+        <br />
+        Since I'm not likely to fix the email component any time soon, after signup you probably won't receive the activition email, so proceed to the activation page here (replace the domain and email address parts) http://<i>loudbite.com</i>/account/activate?email=<i>test@example.com</i><br />
+        <h3>Chapter 7 : Web Services & Feeds section</h3>
+        View feed of <a href="/testws/rssTest">latest loudbite news</a><br />
+        View feed of <a href="/testws/createrss">some other loudbite news</a><br />
 
-Hello I was built using Zend Framework!
+        <h3>Chapter 8 : Lucene Search section</h3>
+        <a href="/search/create-index">create search index (+5 entries)</a><br />
+        <a href="/search/delete-document">remove genre:electronic entries (-2 entries)</a><br />
+        <a href="/search/parsehtml">parse html file for links</a><br />
+        <a href="/search/parseworddoc">parse .docx documents</a><br />
+        <a href="/search/result">search lucene</a><br />
 
-</body>
+        <h3>Chapter 9 : Caching</h3>
+        <a href='/caching/cache-text'>load cache</a> (requires application/tmp dir)<br />
+        <a href='/caching/cache-file'>cached version of AboutUs</a> - a message on 2nd load indicates cache in use<br />
+        <a href='/caching/cache-class'>cached class logic</a><br />
+        <a href='/caching/cache-database'>cached db content</a><br />
+        <a href='/caching/cache-tags'>cached content matching tags</a><br />
+        <a href='/caching/cache-memcached'>not fully implemented</a> see ch9, pg 382-384<br />
+        <a href='/caching/cache-sqlite'>not implemented at all!</a> see ch9, pg 384<br />
+    </body>
 </html>

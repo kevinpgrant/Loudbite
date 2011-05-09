@@ -1,9 +1,9 @@
-<?php 
+<?php
 /**
  * Loudbite.com Form Elements.
  *
  */
-class Elements 
+class Elements
 {
 
     /**
@@ -61,7 +61,7 @@ class Elements
 
     /**
      * Create username text field.
-     * 
+     *
      * @return Zend_Form_Element_Text
      */
     public function getUsernameTextField()
@@ -71,7 +71,7 @@ class Elements
         $usernameElement->setLabel('Username:');
         $usernameElement->setRequired(true);
 
-        //Add validator 
+        //Add validator
         $usernameElement->addValidator
                           (
                             new Zend_Validate_StringLength(6, 20)
@@ -83,7 +83,5 @@ class Elements
         $usernameElement->addFilter(new Zend_Filter_StringToLower());
 
         return $usernameElement;
-
     }
-
 }

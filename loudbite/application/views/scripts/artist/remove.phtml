@@ -1,7 +1,7 @@
 <?php echo $this->doctype('XHTML1_STRICT'); ?>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">  
 <head>
-   <?php echo $this->headTitle('LoudBite.com – Remove Artist'); ?>
+   <?php echo $this->headTitle('LoudBite.com - Remove Artist'); ?>
 </head>
 <body>
 
@@ -13,7 +13,7 @@
 
    <?php foreach($this->artists as $artist){ ?>
    <tr><td><input type="checkbox" value="<?php echo $this->escape($artist['name'])?>"
-                  name="remove" /><?php echo $this->escape($artist['name'])?>
+                  name="remove[]" /><?php echo $this->escape($artist['name'])?>
                 <?php if($this->escape($artist['rating']) == 5){ ?> * <?php } ?></td></tr>
                 <?php } ?>
    <tr><td><input type="submit" value="Remove"/></td></tr>

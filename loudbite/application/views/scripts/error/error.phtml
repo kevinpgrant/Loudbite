@@ -3,6 +3,21 @@
     <title>LoudBite.com</title>
   </head>
   <body>
+        <?php echo $this->render('includes/header.phtml') ?>
     We're sorry, you have located a page that does not exist or contains an error.
+
+        <!-- ?php echo $this->exception->getCode(); ?-->
+<br />
+        <?php echo $this->exception->getFile(); ?>
+<br />
+        <?php echo $this->exception->getLine(); ?>
+<br />
+        <!-- ?php echo $this->exception->getMessage(); ?-->
+<br />
+        <!--?php echo $this->exception->getTrace(); ?-->
+<br />
+        <!--?php echo $this->exception->getTraceAsString(); ?-->
+<br />
+
   </body>
 </html>

@@ -1,7 +1,7 @@
 <?php echo $this->doctype('XHTML1_STRICT'); ?>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-   <?php echo $this->headTitle('LoudBite.com – Artist List'); ?>
+   <?php echo $this->headTitle('LoudBite.com - Artist List'); ?>
 </head>
 <body>
 
@@ -17,8 +17,14 @@ if ($this->paginator){
 
    foreach($this->paginator as $item){
 
-      echo "<tr><td>".$item."</td></tr>";
+          echo "<tr><td>".$item['artist_name']."</td>";
+          if (true)
+    {
+        echo '<td><a href="/artist/add?id=' . $item['id'] . '">like</td>';
+        echo '<td><a href="/artist/remove?id=' . $item['id'] . '">remove</td>';
 
+    }
+          echo "</tr>";
    }
 
    echo "<tr><td>";

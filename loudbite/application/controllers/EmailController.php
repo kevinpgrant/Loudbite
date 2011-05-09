@@ -19,42 +19,42 @@ class EmailController extends Zend_Controller_Action
     }
 
 
-	/**
-	 * Basic example using default settings.
-	 *
-	 */
-	public function sendMailAction()
-	{
+    /**
+     * Basic example using default settings.
+     *
+     */
+    public function sendMailAction()
+    {
 
-		//Send out the welcome message
-		$MailObj      = new Zend_Mail();
-		$emailMessage = "Hey, this is a Zend_Mail created e-mail!";
-		$fromEmail    = "<FROM_EMAIL_ADDRESS>";
-		$fromFullName = "<FROM_FULL_NAME>";
-		$to           = "<YOUR_EMAIL_HERE>";
-		$subject      = "This is an example";
+        //Send out the welcome message
+        $MailObj      = new Zend_Mail();
+        $emailMessage = "Hey, this is a Zend_Mail created e-mail!";
+        $fromEmail    = "admin@loudbite.example.com";
+        $fromFullName = "loudbite admin";
+        $to           = "arthur.writus@loudbite.com";
+        $subject      = "This is an example";
 
-		$MailObj->setBodyText($emailMessage);
-		$MailObj->setFrom($fromEmail, $fromFullName);
-		$MailObj->addTo($to);
-		$MailObj->setSubject($subject);
+        $MailObj->setBodyText($emailMessage);
+        $MailObj->setFrom($fromEmail, $fromFullName);
+        $MailObj->addTo($to);
+        $MailObj->setSubject($subject);
 
-		try{
+        try{
 
-			$MailObj->send();
-			echo "E-mail sent successfully";
+            $MailObj->send();
+            echo "E-mail sent successfully";
 
-		}catch(Zend_Mail_Exception $e){
-			//Your Error message here.
-		}
+        }catch(Zend_Mail_Exception $e){
+            //Your Error message here.
+        }
 
-		//Supress the view.
-		$this->_helper->viewRenderer->setNoRender();
+        //Supress the view.
+        $this->_helper->viewRenderer->setNoRender();
 
-	}
+    }
 
 
-	/**
+    /**
      * Send email using SMTP Host.
      *
      */
@@ -63,22 +63,22 @@ class EmailController extends Zend_Controller_Action
 
        //Create SMTP connection Object
        $configInfo = array('auth'     => 'login',
-    			'ssl'      => 'tls',
-    			'username' => '<YOUR ACCOUNT USERNAME>',
-    			'password' => '<YOUR SMTP ACCOUNT PASSWORD>',
-    			'port'     => '<SMTP PORT NUMBER>');
-    	  $smtpHost   = new Zend_Mail_Transport_Smtp('<SMTP HOST>',
+                'ssl'      => 'tls',
+                'username' => 'arthur.writus@loudbite.com',
+                'password' => 'p455w0rd',
+                'port'     => '587'); // alternate: 465
+          $smtpHost   = new Zend_Mail_Transport_Smtp('smtp.gmail.com',
                                                  $configInfo);
 
         //Create Zend_Mail object.
-    	  $MailObj = new Zend_Mail();
+          $MailObj = new Zend_Mail();
 
-    	//Initialize parameters.
-    	$emailMessage = "Hey, this is a Zend_Mail–created e-mail!";
-        $fromEmail    = "FROM_EMAIL_ADDRESS";
-        $fromFullName = "FROM_FULL_NAME";
-        $to           = "YOUR_EMAIL_HERE";
-        $subject      = "This is an example";
+        //Initialize parameters.
+        $emailMessage = "Hey, this is a Zend_Mail created e-mail!";
+        $fromEmail    = "arthur.writus@loudbite.com";
+        $fromFullName = "loudbite admin";
+        $to           = "arthur.writus@loudbite.com";
+        $subject      = "This is another example" . microtime();
 
         $MailObj->setBodyText($emailMessage);
         $MailObj->setFrom($fromEmail, $fromFullName);
@@ -86,325 +86,325 @@ class EmailController extends Zend_Controller_Action
         $MailObj->setSubject($subject);
 
 
-    	//Send Email using transport protocol.
-    	try{
+        //Send Email using transport protocol.
+        try{
 
-    		$MailObj->send($smtpHost);
-    	 	echo "Email sent successfully";
+            $MailObj->send($smtpHost);
+             echo "Email sent successfully";
 
-    	}catch(Zend_Mail_Exception $e){
-    		 //Your Error message here.
-    		 echo $e->getMessage();
-    	}
+        }catch(Zend_Mail_Exception $e){
+             //Your Error message here.
+             echo $e->getMessage();
+        }
 
-    	//Supress the view.
-    	$this->_helper->viewRenderer->setNoRender();
+        //Supress the view.
+        $this->_helper->viewRenderer->setNoRender();
 
 
     }
 
     /**
-	 * Send email using SMTP Host and CC.
-	 *
-	 */
-	 public function sendEmailWithCopyAction()
-	{
-		//Send out the welcome message
-		$MailObj      = new Zend_Mail();
-		$emailMessage = "Hey, this is a Zend_Mail created e-mail!";
-		$fromEmail    = "<FROM_EMAIL_ADDRESS>";
-		$fromFullName = "<FROM_FULL_NAME>";
-		$to           = "<YOUR_EMAIL_HERE>";
-		$subject      = "This is an example";
+     * Send email using SMTP Host and CC.
+     *
+     */
+     public function sendEmailWithCopyAction()
+    {
+        //Send out the welcome message
+        $MailObj      = new Zend_Mail();
+        $emailMessage = "Hey, this is a Zend_Mail created e-mail!";
+                $fromEmail    = "arthur.writus@loudbite.com";
+                $fromFullName = "loudbite admin";
+                $to           = "arthur.writus@loudbite.com";
+                $subject      = "This is a copy example" . microtime();
 
-	    $MailObj->setBodyText($emailMessage);
-	    $MailObj->setFrom($fromEmail, $fromFullName);
-	    $MailObj->addTo($to);
-	    $MailObj->addCc('<SECONDARY EMAIL>', '<SECONDARY NAME>');
-	    $MailObj->setSubject($subject);
+        $MailObj->setBodyText($emailMessage);
+        $MailObj->setFrom($fromEmail, $fromFullName);
+        $MailObj->addTo($to);
+        $MailObj->addCc('joe.public@example.com', 'Joseph Public');
+        $MailObj->setSubject($subject);
 
 
-		try{
+        try{
 
-			$MailObj->send();
-			echo "E-mail sent successfully";
+            $MailObj->send();
+            echo "E-mail sent successfully";
 
-		}catch(Zend_Mail_Exception $e){
-			//Your Error message here.
-		}
+        }catch(Zend_Mail_Exception $e){
+            //Your Error message here.
+        }
 
-		//Supress the view.
-		$this->_helper->viewRenderer->setNoRender();
+        //Supress the view.
+        $this->_helper->viewRenderer->setNoRender();
 
 
-	 }
+     }
 
 
 
-	/**
-	 * Send email using SMTP Host and CC.
-	 *
-	 */
-	 public function sendEmailWithCopyAction_Listing_6_5()
-	{
+    /**
+     * Send email using SMTP Host and CC.
+     *
+     */
+     public function sendEmailWithCopyAction_Listing_6_5()
+    {
 
 
-		//Send out the welcome message
-		$MailObj      = new Zend_Mail();
-		$emailMessage = "Hey, this is a Zend_Mail created e-mail!";
-		$fromEmail    = "<FROM_EMAIL_ADDRESS>";
-		$fromFullName = "<FROM_FULL_NAME>";
-		$to           = "<YOUR_EMAIL_HERE>";
-		$subject      = "This is an example";
+        //Send out the welcome message
+        $MailObj      = new Zend_Mail();
+        $emailMessage = "Hey, this is a Zend_Mail created e-mail!";
+        $fromEmail    = "<FROM_EMAIL_ADDRESS>";
+        $fromFullName = "<FROM_FULL_NAME>";
+        $to           = "<YOUR_EMAIL_HERE>";
+        $subject      = "This is an example";
 
-		$MailObj->setBodyText($emailMessage);
-		$MailObj->setFrom($fromEmail, $fromFullName);
-		$MailObj->addTo($to);
-		$MailObj->addCc('<SECONDARY EMAIL>', '<SECONDARY NAME>');
-		$MailObj->addCc('<THIRD EMAIL>', '<THIRD NAME>');
+        $MailObj->setBodyText($emailMessage);
+        $MailObj->setFrom($fromEmail, $fromFullName);
+        $MailObj->addTo($to);
+        $MailObj->addCc('<SECONDARY EMAIL>', '<SECONDARY NAME>');
+        $MailObj->addCc('<THIRD EMAIL>', '<THIRD NAME>');
 
-		$MailObj->setSubject($subject);
+        $MailObj->setSubject($subject);
 
 
-		try{
+        try{
 
-			$MailObj->send();
-			echo "E-mail sent successfully";
+            $MailObj->send();
+            echo "E-mail sent successfully";
 
-		}catch(Zend_Mail_Exception $e){
-			//Your Error message here.
-		}
+        }catch(Zend_Mail_Exception $e){
+            //Your Error message here.
+        }
 
-		//Supress the view.
-		$this->_helper->viewRenderer->setNoRender();
+        //Supress the view.
+        $this->_helper->viewRenderer->setNoRender();
 
-	}
+    }
 
 
-	/**
-	 * Send email using SMTP Host and BCC.
-	 *
-	 */
-	 public function sendEmailWithCopyAction_Listing_6_6(){
+    /**
+     * Send email using SMTP Host and BCC.
+     *
+     */
+     public function sendEmailWithCopyAction_Listing_6_6(){
 
-		//Send out the welcome message
-		$MailObj      = new Zend_Mail();
-		$emailMessage = "Hey, this is a Zend_Mail created e-mail!";
-		$fromEmail    = "<FROM_EMAIL_ADDRESS>";
-		$fromFullName = "<FROM_FULL_NAME>";
-		$to           = "<YOUR_EMAIL_HERE>";
-		$subject      = "This is an example";
+        //Send out the welcome message
+        $MailObj      = new Zend_Mail();
+        $emailMessage = "Hey, this is a Zend_Mail created e-mail!";
+        $fromEmail    = "<FROM_EMAIL_ADDRESS>";
+        $fromFullName = "<FROM_FULL_NAME>";
+        $to           = "<YOUR_EMAIL_HERE>";
+        $subject      = "This is an example";
 
-		$MailObj->setBodyText($emailMessage);
-		$MailObj->setFrom($fromEmail, $fromFullName);
-		$MailObj->addTo($to);
-		$MailObj->addBcc('<SECONDARY EMAIL>');
-		$MailObj->addBcc('<THIRD EMAIL>');
+        $MailObj->setBodyText($emailMessage);
+        $MailObj->setFrom($fromEmail, $fromFullName);
+        $MailObj->addTo($to);
+        $MailObj->addBcc('<SECONDARY EMAIL>');
+        $MailObj->addBcc('<THIRD EMAIL>');
 
-		$MailObj->setSubject($subject);
+        $MailObj->setSubject($subject);
 
-		try{
+        try{
 
-			$MailObj->send();
-			echo "E-mail sent successfully";
+            $MailObj->send();
+            echo "E-mail sent successfully";
 
-		}catch(Zend_Mail_Exception $e){
-			//Your Error message here.
-		}
+        }catch(Zend_Mail_Exception $e){
+            //Your Error message here.
+        }
 
-		//Supress the view.
-		$this->_helper->viewRenderer->setNoRender();
+        //Supress the view.
+        $this->_helper->viewRenderer->setNoRender();
 
 
-	 }
+     }
 
-	/**
-	 * Send HTML based email.
-	 *
-	 */
-	public function sendHtmlEmailAction(){
+    /**
+     * Send HTML based email.
+     *
+     */
+    public function sendHtmlEmailAction(){
 
-		//Create SMTP connection
-		$configInfo = array('auth'     => 'login',
-					'ssl'      => 'tls',
-					'username' => '<YOUR ACCOUNT USERNAME>',
-					'password' => '<YOUR SMTP ACCOUNT PASSWORD>',
-					'port'     => '<SMTP PORT NUMBER>');
-		$smtpHost   = new Zend_Mail_Transport_Smtp('<SMTP HOST>',
-													 $configInfo);
+        //Create SMTP connection
+        $configInfo = array('auth'     => 'login',
+                    'ssl'      => 'tls',
+                    'username' => 'arthur.writus@loudbite.com',
+                    'password' => 'p455w0rd',
+                    'port'     => '587');
+        $smtpHost   = new Zend_Mail_Transport_Smtp('smtp.gmail.com',
+                                                     $configInfo);
 
-		//Create Zend_Mail object.
-		$MailObj = new Zend_Mail();
+        //Create Zend_Mail object.
+        $MailObj = new Zend_Mail();
 
-		$message      = "<h1>Welcome to the example</h1><br>" .
-						"<p>An example email.</p>";
+        $message      = "<h1>Welcome to the example</h1><br>" .
+                        "<p>An example email.</p>";
 
-		//Initialize parameters.
-		$fromEmail    = "FROM_EMAIL_ADDRESS";
-		$fromFullName = "FROM_FULL_NAME";
-		$to           = "YOUR_EMAIL_HERE";
-		$subject      = "This is an example";
+        //Initialize parameters.
+        $fromEmail    = "FROM_EMAIL_ADDRESS";
+        $fromFullName = "FROM_FULL_NAME";
+        $to           = "YOUR_EMAIL_HERE";
+        $subject      = "This is an example";
 
-		$MailObj->setBodyHtml($message);
-		$MailObj->setFrom($fromEmail, $fromFullName);
-		$MailObj->addTo($to);
-		$MailObj->setSubject($subject);
+        $MailObj->setBodyHtml($message);
+        $MailObj->setFrom($fromEmail, $fromFullName);
+        $MailObj->addTo($to);
+        $MailObj->setSubject($subject);
 
-		//Send Email using transport protocol.
-		try{
+        //Send Email using transport protocol.
+        try{
 
-			$MailObj->send($smtpHost);
-			echo "Email sent successfully";
+            $MailObj->send($smtpHost);
+            echo "Email sent successfully";
 
-		}catch(Zend_Mail_Exception $e){
-			//Your Error message here.
-		}
+        }catch(Zend_Mail_Exception $e){
+            //Your Error message here.
+        }
 
-		//Supress the view.
-		$this->_helper->viewRenderer->setNoRender();
+        //Supress the view.
+        $this->_helper->viewRenderer->setNoRender();
 
-	}
+    }
 
-	/**
-	 * Send out email with attachment
-	 *
-	 */
-	public function sendEmailWithAttachmentAction()
-	{
+    /**
+     * Send out email with attachment
+     *
+     */
+    public function sendEmailWithAttachmentAction()
+    {
 
-	    //Create SMTP connection
-	    $configInfo = array('auth'     => 'login',
-	    			'ssl'      => 'tls',
-	    			'username' => '<YOUR ACCOUNT USERNAME>',
-	    			'password' => '<YOUR SMTP ACCOUNT PASSWORD>',
-	    			'port'     => '<SMTP PORT NUMBER>');
+        //Create SMTP connection
+        $configInfo = array('auth'     => 'login',
+                    'ssl'      => 'tls',
+                    'username' => '<YOUR ACCOUNT USERNAME>',
+                    'password' => '<YOUR SMTP ACCOUNT PASSWORD>',
+                    'port'     => '<SMTP PORT NUMBER>');
 
-	    $smtpHost   = new Zend_Mail_Transport_Smtp('<SMTP HOST>',
-	                                                 $configInfo);
+        $smtpHost   = new Zend_Mail_Transport_Smtp('<SMTP HOST>',
+                                                     $configInfo);
 
 
-	    //Create Zend_Mail object.
-	    $MailObj = new Zend_Mail();
+        //Create Zend_Mail object.
+        $MailObj = new Zend_Mail();
 
-	    $message = "<h1>Welcome to the example</h1>.
-	              <br><p>An example email.</p>";
+        $message = "<h1>Welcome to the example</h1>.
+                  <br><p>An example email.</p>";
 
-	    //Read image data.
-	    $fileLocation = '<PATH TO YOUR FILE>';
+        //Read image data.
+        $fileLocation = '<PATH TO YOUR FILE>';
 
-	        //Check if the file exists and is readable
-	    if(!$fileHandler = fopen($fileLocation, 'rb')){
+            //Check if the file exists and is readable
+        if(!$fileHandler = fopen($fileLocation, 'rb')){
 
-	        throw new Exception("The file could not be
-	                    found or is not readable.");
+            throw new Exception("The file could not be
+                        found or is not readable.");
 
-	    }
+        }
 
-	    $fileContent = fread($fileHandler, filesize($fileLocation));
-	    fflush($fileHandler);
-	    fclose($fileHandler);
+        $fileContent = fread($fileHandler, filesize($fileLocation));
+        fflush($fileHandler);
+        fclose($fileHandler);
 
-	    //Initialize parameters.
-	    $fromEmail    = "<FROM_EMAIL_ADDRESS";
-	    $fromFullName = "<FROM_FULL_NAME>";
-	    $to           = "<YOUR_EMAIL_HERE>";
-	    $subject      = "This is an example";
+        //Initialize parameters.
+        $fromEmail    = "<FROM_EMAIL_ADDRESS";
+        $fromFullName = "<FROM_FULL_NAME>";
+        $to           = "<YOUR_EMAIL_HERE>";
+        $subject      = "This is an example";
 
 
-	    $MailObj->setBodyHtml($message);
-	    $MailObj->setFrom($fromEmail, $fromFullName);
-	    $MailObj->addTo($to);
-	    $MailObj->setSubject($subject);
-	    $MailObj->createAttachment($fileContent,
-	                               '<MIME TYPE OF FILE>',
-	                               Zend_Mime::DISPOSITION_ATTACHMENT);
+        $MailObj->setBodyHtml($message);
+        $MailObj->setFrom($fromEmail, $fromFullName);
+        $MailObj->addTo($to);
+        $MailObj->setSubject($subject);
+        $MailObj->createAttachment($fileContent,
+                                   '<MIME TYPE OF FILE>',
+                                   Zend_Mime::DISPOSITION_ATTACHMENT);
 
 
-	    	//Send Email using transport protocol.
-	    	try{
+            //Send Email using transport protocol.
+            try{
 
-	    		$MailObj->send($smtpHost);
-	    	 	echo "Email sent successfully";
+                $MailObj->send($smtpHost);
+                 echo "Email sent successfully";
 
-	    	}catch(Zend_Mail_Exception $e){
+            }catch(Zend_Mail_Exception $e){
 
-	    		 //Your Error message here.
-	    		 echo $e->getMessage();
+                 //Your Error message here.
+                 echo $e->getMessage();
 
-	    	}
+            }
 
-	    //Supress the view.
-	    $this->_helper->viewRenderer->setNoRender();
+        //Supress the view.
+        $this->_helper->viewRenderer->setNoRender();
 
-	}
+    }
 
 
 
-	/**
-	 * Send email using SMTP Host.
-	 * Validate e-email address.
-	 *
-	 */
-	public function smtpSendMailAction_Listing_6_9()
-	{
-		//Create SMTP connection
-		$configInfo = array('auth'     => 'login',
-							'ssl'      => 'tls',
-							'username' => '<YOUR ACCOUNT USERNAME>',
-							'password' => '<YOUR SMTP ACCOUNT PASSWORD>',
-							'port'     => '<SMTP PORT NUMBER>');
+    /**
+     * Send email using SMTP Host.
+     * Validate e-email address.
+     *
+     */
+    public function smtpSendMailAction_Listing_6_9()
+    {
+        //Create SMTP connection
+        $configInfo = array('auth'     => 'login',
+                            'ssl'      => 'tls',
+                            'username' => '<YOUR ACCOUNT USERNAME>',
+                            'password' => '<YOUR SMTP ACCOUNT PASSWORD>',
+                            'port'     => '<SMTP PORT NUMBER>');
 
-		$smtpHost   = new Zend_Mail_Transport_Smtp('<SMTP HOST>',
-													 $configInfo);
+        $smtpHost   = new Zend_Mail_Transport_Smtp('<SMTP HOST>',
+                                                     $configInfo);
 
-		//Create Zend_Mail object.
-		$MailObj = new Zend_Mail();
+        //Create Zend_Mail object.
+        $MailObj = new Zend_Mail();
 
 
-		//Initialize parameters.
-		$emailMessage = "Hey, this is a Zend_Mail–created e-mail!";
-		$fromEmail    = "<FROM_EMAIL_ADDRESS>";
-		$fromFullName = "<FROM_FULL_NAME>";
-		$to           = "<YOUR_EMAIL_HERE>";
-		$subject      = "This is an example";
+        //Initialize parameters.
+        $emailMessage = "Hey, this is a Zend_Mail–created e-mail!";
+        $fromEmail    = "<FROM_EMAIL_ADDRESS>";
+        $fromFullName = "<FROM_FULL_NAME>";
+        $to           = "<YOUR_EMAIL_HERE>";
+        $subject      = "This is an example";
 
-		//Check if email is valid.
-		$validator = new Zend_Validate_EmailAddress(
-					  Zend_Validate_Hostname::ALLOW_DNS,
-					  true);
+        //Check if email is valid.
+        $validator = new Zend_Validate_EmailAddress(
+                      Zend_Validate_Hostname::ALLOW_DNS,
+                      true);
 
-		if($validator->isValid($to)){
+        if($validator->isValid($to)){
 
-			$MailObj->setBodyText($emailMessage);
-			$MailObj->setFrom($fromEmail, $fromFullName);
-			$MailObj->addTo($to);
-			$MailObj->setSubject($subject);
+            $MailObj->setBodyText($emailMessage);
+            $MailObj->setFrom($fromEmail, $fromFullName);
+            $MailObj->addTo($to);
+            $MailObj->setSubject($subject);
 
-			//Send Email using transport protocol.
-			try{
+            //Send Email using transport protocol.
+            try{
 
-				$MailObj->send($smtpHost);
-				echo "Email sent successfully";
+                $MailObj->send($smtpHost);
+                echo "Email sent successfully";
 
-			}catch(Zend_Mail_Exception $e){
+            }catch(Zend_Mail_Exception $e){
 
-				//Your Error message here.
-				echo $e->getMessage();
+                //Your Error message here.
+                echo $e->getMessage();
 
-			}
+            }
 
-		}else{
+        }else{
 
-			//Messages in array.
-			$messages = $validator->getMessages();
-			foreach($messages as $message){
-				echo $message.'<br/>';
-			}
-		}
+            //Messages in array.
+            $messages = $validator->getMessages();
+            foreach($messages as $message){
+                echo $message.'<br/>';
+            }
+        }
 
-		//Supress the view.
-		$this->_helper->viewRenderer->setNoRender();
-	}
+        //Supress the view.
+        $this->_helper->viewRenderer->setNoRender();
+    }
 
 
 

@@ -94,7 +94,7 @@ class CachingController extends Zend_Controller_Action
 
 	   try{
 	      //Initialize file path
-	      $filePath = "../public/aboutus.html";
+	      $filePath = "../public/AboutUs.html";
 
 	      //Frontend attributes of what we're caching.
 	      $frontendOption = array('cache_id_prefix' => 'loudbite_',
@@ -167,7 +167,7 @@ class CachingController extends Zend_Controller_Action
 									   $frontendoption,
 									   $backendOptions);
 
-		  echo $cache->add(1,4);
+		  echo $cache->add(5,5); // was 1,4
 
 		  //Suppress the view
 		  $this->_helper->viewRenderer->setNoRender();
@@ -492,10 +492,5 @@ class CachingController extends Zend_Controller_Action
 
 	   //Suppress the view
 	   $this->_helper->viewRenderer->setNoRender();
-
 	}
-
-
-
-
 }

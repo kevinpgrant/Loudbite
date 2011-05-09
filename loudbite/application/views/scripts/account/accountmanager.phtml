@@ -1,7 +1,7 @@
 <?php echo $this->doctype('XHTML1_STRICT'); ?>
 <html>
 <head>
- <?php echo $this->headTitle('LoudBite.com – Account Manager'); ?>
+ <?php echo $this->headTitle('LoudBite.com - Account Manager'); ?>
 </head>
 <body>
 <?php echo $this->render("includes/header.phtml"); ?>
@@ -16,7 +16,7 @@
    <tr><td>Username: <?php echo $this->escape($this->username); ?></td></tr>
    <tr><td>Date Joined: <?php echo $this->dateJoined?></td></tr>
    </table>
-
+	<a href="/account/update">update details</a> | <a href="/account/view-all">view all</a>
 </td>
 <td valign="top">
 
@@ -31,7 +31,7 @@
 
    <?php foreach($this->artists as $artist){?>
       <tr>
-         <td><a href='artist/<?php echo
+         <td><a href='/artist/profile?artistname=<?php echo
              urlencode($artist['artist_name'])?>'>
              <?php echo $this->escape($artist['artist_name']); ?></a></td>
          <td><?php echo $this->escape($artist['date_became_fan']); ?></td></tr>

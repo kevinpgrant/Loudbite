@@ -2,6 +2,9 @@
 
 class ProductController extends Zend_Controller_Action
 {
+    // FIXME rotate AWS keys every so often
+    protected $aws_api_key = 'ABCDEF1234567890ABCD';
+    protected $aws_private_key = 'qwertyuiopasdfghjklzxcvbnm123/4567890abc';
 
     public function init()
     {
@@ -28,9 +31,9 @@ class ProductController extends Zend_Controller_Action
 
       try{
 
-         $amazon = new Zend_Service_Amazon('API_KEY', 'US');
+         $amazon = new Zend_Service_Amazon($this->aws_api_key, 'UK', $this->aws_private_key);
 
-         //Get the apparel t-shirts items
+        //Get the apparel t-shirts items
          $apparelItems = $amazon->itemSearch(
                                     array('SearchIndex' => 'Apparel',
                                           'Keywords'   => $artistName.' t-shirt',
@@ -71,7 +74,7 @@ class ProductController extends Zend_Controller_Action
 
 	   try{
 
-		  $amazon = new Zend_Service_Amazon('API_KEY', 'US');
+		  $amazon = new Zend_Service_Amazon($this->aws_api_key, 'UK', $this->aws_private_key);
 
 		  //Get the Music tracks
 		  $cds = $amazon->itemSearch(array('SearchIndex' => 'Music',
@@ -86,4 +89,3 @@ class ProductController extends Zend_Controller_Action
 
 
 }
-

@@ -15,7 +15,7 @@ defined('APPLICATION_ENV')
 set_include_path(implode(PATH_SEPARATOR, array(
     realpath(APPLICATION_PATH . '/../library'),
     get_include_path(),
-)).";".realpath(APPLICATION_PATH . '/models'));
+)).PATH_SEPARATOR.realpath(APPLICATION_PATH . '/models'));
 
 
 /** Zend_Application */
@@ -30,6 +30,13 @@ $application = new Zend_Application(
 
 /** Routing Info **/
 $FrontController = Zend_Controller_Front::getInstance();
+
+$plugin = new Zend_Controller_Plugin_ErrorHandler();
+$plugin->setErrorHandler(array("controller" => 'ApplicationError',
+"action" => 'index'));
+$FrontController->registerPlugin($plugin);
+
+
 $Router = $FrontController->getRouter();
 
 $Router->addRoute("artiststore",
@@ -40,8 +47,43 @@ $Router->addRoute("artiststore",
                        "action"     => "artistaffiliatecontent"
                       )));
 
+$Router->addRoute("artistprofile",
+			new Zend_Controller_Router_Route(
+			"artist/profile/:artistname",
+			array(
+			// "artistname" => "The Smiths",
+			"controller" => "artist",
+			"action" => "profile")));
+
+$Router->addRoute("artistlistall",
+                  new Zend_Controller_Router_Route(
+                      "artist/list-all-artists",
+                      array
+                      ("controller" => "artist",
+                       "action"     => "list"
+                      )));
+
+$Router->addRoute("testclientws",
+                  new Zend_Controller_Router_Route(
+                      "test/clientws",
+                      array
+                      ("controller" => "testws",
+                       "action"     => "clientws"
+                      )));
 
 
 
-$application->bootstrap()
+
+
+
+try
+{
+    $application->bootstrap()
             ->run();
+}
+catch (Exception $e)
+{
+    echo '<pre style="border: 1px dashed silver;">';
+    echo $e->getMessage() . '<br />';
+    echo '</pre>';
+}

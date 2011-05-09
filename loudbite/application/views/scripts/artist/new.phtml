@@ -1,14 +1,12 @@
 <?php echo $this->doctype('XHTML1_STRICT'); ?>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
 <head>
-   <?php echo $this->headTitle('LoudBite.com - Update Info'); ?>
+<?php echo $this->headTitle('LoudBite.com - Add Artist'); ?>
 </head>
 <body>
-
 <?php echo $this->render('includes/header.phtml') ?>
-
-   <h3>Update My Profile</h3>
-   <?php echo $this->form; ?>
-   
-</body>
+   <h2>Add Artist</h2>
+    <?php echo $this->form->render(); ?>
+   </body>
 </html>

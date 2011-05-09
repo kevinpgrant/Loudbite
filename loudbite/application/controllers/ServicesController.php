@@ -13,15 +13,21 @@ class ServicesController extends Zend_Controller_Action
    /**
     * Display all the artists in the system.
     */
-   public function getartistsAction(){
-
-      $server = new Zend_Rest_Server();
-      $server->setClass('WebServices');
-      $server->handle(array('method' => 'getartists'));
-   }
-
-
-
-
-
+   public function getartistsAction()
+    {
+        try
+        {
+	        require_once "services/WebServices.php";
+            $server = new Zend_Rest_Server();
+            $server->setClass('WebServices');
+            $server->handle(array('method' => 'getArtists'));
+        }
+        catch (Exception $e)
+        {
+	        print_r($e->getMessage());
+	        exit;
+        }
+	    //Suppress the view
+	    $this->_helper->viewRenderer->setNoRender();
+     }
 }

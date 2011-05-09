@@ -25,6 +25,9 @@
           <viewControllerScriptsDirectory forControllerName="Error">
             <viewScriptFile forActionName="error"/>
           </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="artist">
+            <viewScriptFile forActionName="list-all-artists"/>
+          </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>
         <viewFiltersDirectory enabled="false"/>

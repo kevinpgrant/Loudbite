@@ -1,0 +1,47 @@
+<?php echo $this->doctype('XHTML1_STRICT'); ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+   <?php echo $this->headTitle('LoudBite.com - Artist Profile'); ?>
+</head>
+<body>
+
+    <?php echo $this->render('includes/header.phtml') ?>
+    <h3>Artist Profile</h3>
+    Search Flickr for <a href="/artist/list-photos?artist=<?php echo(htmlentities($_GET['artistname'])); ?>"><?php echo(htmlentities($_GET['artistname'])); ?> photos</a><br />
+    Search YouTube for <a href="/artist/video-list?artist=<?php echo(htmlentities($_GET['artistname'])); ?>"><?php echo(htmlentities($_GET['artistname'])); ?> videos</a><br />
+    Search for <a href="/product/quick-product-display?artistName=<?php echo(htmlentities($_GET['artistname'])); ?>"><?php echo(htmlentities($_GET['artistname'])); ?> music products</a><br />
+    Search for <a href="/product/index?artistName=<?php echo(htmlentities($_GET['artistname'])); ?>">more <?php echo(htmlentities($_GET['artistname'])); ?> related products</a><br />
+    <br />
+    <br />
+    <div style="border : 2px dashed silver; width: 600px;">
+        <p><b>Test local Web Services</b></p>
+        <ul>
+            <li><a href="/services/getartists">test local REST server</a></li>
+            <li><a href="/testws/clientws">test local REST client</a>
+        </ul>
+        <p><b>Test example REST Web Services / remote APIs</b> - these examples use hardcoded search terms:</p>
+        <ul>
+            <li><a href="/testws/testYoutube">YouTube content</a> (milli vanilli)</li>
+            <li><a href="/testws/testYoutubeKeyword">YouTube keyword search</a> (Marvin Gaye)</li>
+            <li><a href="/testws/testFlickrConn">Flickr user search</a> (user email search - specify in app)</li>
+            <li><a href="/testws/testFlickrTags">Flickr tag search</a> (php zend?)</li>
+            <li><a href="/testws/testflickrgroups">Flickr group search</a> ('97294691@N00', supposed to have been  'kisscrazy')</li>
+            <li><a href="/testws/amazontest">amazonTest</a> (music search: motley crew)</li>
+            <li><a href="/testws/amazonCountryCodeTest">amazonCountryCodeTest</a> (music search: motley crew, country code: FR)</li>
+            <li><a href="/testws/amazonMultikeysTest">amazonMultikeysTest</a> (type: books, condition: used, subject: php, min: £10.00, max: £20.00)</li>
+            <li><a href="/testws/amazonSearchByPublisherTest">amazonSearchByPublisherTest</a> (type: books, condition: all, publisher: Apress)</li>
+            <li><a href="/testws/amazonSortingBooksTest">amazonSortingBooksTest</a></li>
+            <li><a href="/testws/amazonSimilarProductsTest">amazonSimilarProductsTest</a> *</li>
+            <li><a href="/testws/amazonFetchReviewsTest">amazonFetchReviewsTest</a> *</li>
+            <li><a href="/testws/amazonLookupTest">amazonLookupTest</a> *</li>
+            <li><a href="/testws/rssTest">rsstest</a> - loaded from local file</li>
+            <li><a href="/testws/rss-Load-From-String-Test">rssLoadFromStringTest</a> - note the better use of naming convention! **</li>
+            <li><a href="/testws/createRss">createRss</a></li>
+        </ul>
+
+        <p><b>*</b> these actions display results from php without using a view, so there is no 'loudbite' header on these pages. You can copy from one of the existing amazon*.phtml files and amazon*Action methods that I already converted. ;-)</p>
+        <p><b>**</b> my apologies for this... I wanted to keep the application simple and avoid adding lots the mysterious voodoo of bootstrap redirects as I went along. I also figured a lot of the exceptions I encountered were due to filesystem / case sensitivity (the author had hinted at this in some of the source code updates already) so i had pretty much completed the application by mangling everything into lowercased URLs and method names. I really ought to have paid more attention to this sooner, using the hyphenated URLs and camel case methods. Hey well, at least it kinda works, please learn from my mistake and dont copy my fugliness! ;-)</p>
+
+    </div>
+</body>
+</html>
